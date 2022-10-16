@@ -1,0 +1,31 @@
+name: "上班"
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "00 00 * * 1-5"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: composer install --optimize-autoloader --no-dev
+
+      - name: Run sign
+        env:
+          MOGUDING_DEVICE: ${{ secrets.DEVICE }}
+          MOGUDING_PHONE: ${{ secrets.PHONE }}
+          MOGUDING_PASSWORD: ${{ secrets.PASSWORD }}
+          MOGUDING_PROVINCE: ${{ secrets.PROVINCE }}
+          MOGUDING_CITY: ${{ secrets.CITY }}
+          MOGUDING_ADDRESS: ${{ secrets.ADDRESS }}
+          MOGUDING_LONGITUDE: ${{ secrets.LONGITUDE }}
+          MOGUDING_LATITUDE: ${{ secrets.LATITUDE }}
+          MOGUDING_TYPE: "START"
+          MOGUDING_DESCRIPTION: ${{ secrets.DESCRIPTION }}
+          MOGUDING_SCT_KEY: ${{ secrets.SENDKEY }}
+        run: php artisan moguding
